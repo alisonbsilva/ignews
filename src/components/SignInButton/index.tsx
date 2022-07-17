@@ -3,16 +3,14 @@ import { FiX } from 'react-icons/fi'
 import { signIn, useSession } from 'next-auth/react'
 
 
-
 import styles from './styles.module.scss'
 
 import React from "react"
 
 export function SignInButton(){
-  const [session] = useSession()
-
-
-
+  const session = useSession()
+  console.log(session)
+  
   return session ? (
     <button 
     type="button"
@@ -33,3 +31,6 @@ export function SignInButton(){
     </button>
   )
 }
+
+
+
