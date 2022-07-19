@@ -4,6 +4,7 @@ import NextAuth from 'next-auth'
 import { query as q } from "faunadb"
 
 
+
 export default NextAuth({
   providers: [
     GithubProvider({
@@ -16,6 +17,9 @@ export default NextAuth({
       },
     }),
   ],
+  jwt: {
+    secret: process.env.SIGNING_KEY,
+  },
   callbacks: {
     async signIn({ user, account, profile }) {    
       const { email } = user
@@ -24,15 +28,14 @@ export default NextAuth({
         await fauna.query(
           q.Create(
             q.Collection('users'),
-              {
-                data: { email: email }
-              }
+              { data: { email: email } }
             )
-        )        
-          } catch (e) {
-            console.log(e)
-          }
-      return true
+        )      
+        return true  
+     } catch {
+        return false
+      } 
+      
     },  
   }
 })
