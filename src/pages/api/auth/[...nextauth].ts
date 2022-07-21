@@ -1,7 +1,8 @@
 import GithubProvider from "next-auth/providers/github"
 import { fauna } from '../../../services/fauna'
 import NextAuth from 'next-auth'
-import { query as q } from "faunadb"
+import { Collection, query as q, Ref } from "faunadb"
+import { ifError } from "assert"
 
 
 
@@ -20,17 +21,29 @@ export default NextAuth({
   jwt: {
     secret: process.env.SIGNING_KEY
   },
+
   callbacks: {
     async signIn({ user, account, profile }) {    
       const { email } = user
-      const isAllowedToSignIn = true
       try {
         await fauna.query(
           q.Create(
             q.Collection('users'),
-            { Data: { email: email } }
+            { data: { email: email } }
             )
-            )      
+            )  
+            .then((ret) => console.log(ret))
+            .catch((err) => console.error(
+              'Error: [%s] %s: %s',
+              err.name,
+              err.message,
+              err.errors()[0].description,
+              {
+                ref: Ref(Collection("Posts"), "1"),
+                ts: 1622574501060000,
+                data: { title: 'The first post' }
+              }
+            ))    
             return true  
           } catch(err) {
             console.log(err)
