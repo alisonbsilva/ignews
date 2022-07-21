@@ -18,17 +18,17 @@ export default NextAuth({
     }),
   ],
   jwt: {
-    secret: process.env.SIGNING_KEY,
+    secret: process.env.SIGNING_KEY
   },
   callbacks: {
     async signIn({ user, account, profile }) {    
       const { email } = user
-      
+      const isAllowedToSignIn = true
       try {
         await fauna.query(
           q.Create(
             q.Collection('users'),
-            { data: { email: email } }
+            { Data: { email: email } }
             )
             )      
             return true  
