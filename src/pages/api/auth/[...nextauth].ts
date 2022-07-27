@@ -32,21 +32,8 @@ export default NextAuth({
             { data: { email: email } }
             )
             )  
-            .then((ret) => console.log(ret))
-            .catch((err) => console.error(
-              'Error: [%s] %s: %s',
-              err.name,
-              err.message,
-              err.errors()[0].description,
-              {
-                ref: Ref(Collection("Posts"), "1"),
-                ts: 1622574501060000,
-                data: { title: 'The first post' }
-              }
-            ))    
             return true  
           } catch(err) {
-            console.log(err)
             return false
           } 
           
